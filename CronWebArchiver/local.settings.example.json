@@ -1,0 +1,21 @@
+{
+  "OutputDirectory": "/app/scraped_html",
+  "FlareSolverrUrl": "http://flaresolverr:8191",
+  "UrlsToScrape": [
+    {
+      "Url": "https://www.zillow.com/grand-rapids-mi/",
+      "FileName": "gr_housing",
+      "CronExpression": "0 */6 * * *"
+    },
+    {
+      "Url": "https://weather.com/weather/today/l/Grand+Rapids+MI",
+      "FileName": "gr_weather",
+      "CronExpression": "*/30 * * * *"
+    },
+    {
+      "Url": "https://www.bankrate.com/mortgages/current-rates/",
+      "FileName": "mortgage_rates",
+      "CronExpression": "0 */4 * * *"
+    }
+  ]
+}
