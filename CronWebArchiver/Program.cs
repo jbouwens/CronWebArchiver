@@ -81,9 +81,32 @@ async Task RunScrapingLoop(Configuration config, WebScraper scraper)
 
 Configuration LoadConfiguration()
 {
-    return File.Exists("local.settings.json")
+    var appSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
+
+    if (File.Exists(appSettingsPath))
+    {
+        try
+        {
+            var config = JsonSerializer.Deserialize<Configuration>(
+                File.ReadAllText(appSettingsPath),
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            if (config != null)
+            {
+                logger.LogInformation("Loaded configuration from {ConfigPath}", appSettingsPath);
+                return config;
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to load configuration from {ConfigPath}", appSettingsPath);
+        }
+    }
+
+    var localSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "local.settings.json");
+    return File.Exists(localSettingsPath)
         ? JsonSerializer.Deserialize<Configuration>(
-              File.ReadAllText("local.settings.json"),
+              File.ReadAllText(localSettingsPath),
               new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
           ?? CreateDefaultConfiguration()
         : CreateDefaultConfiguration();
